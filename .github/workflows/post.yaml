@@ -1,0 +1,41 @@
+name: Review
+
+on:
+  issues:
+    types: [opened]
+  pull_request_target:
+    types: [opened]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Add Summary for reviews
+        run: echo '### reviews Workflow Summary 🚀' > $GITHUB_STEP_SUMMARY
+
+      - name: Post review message for issues
+        if: github.event_name == 'issues'
+        run: |
+          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+               -H "Accept: application/vnd.github.v3+json" \
+               --request POST \
+               --data '{"body":"👋 Thank you for opening this issue! We will get back to you shortly."}' \
+               https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/comments
+          echo 'Issue review message posted.' >> $GITHUB_STEP_SUMMARY
+
+      - name: Post review message for pull requests
+        if: github.event_name == 'pull_request_target'
+        run: |
+          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+               -H "Accept: application/vnd.github.v3+json" \
+               --request POST \
+               --data '{"body":"🎉 Thank you for this pull request! We will review it as soon as possible."}' \
+               https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments
+          echo 'Pull request review message posted.' >> $GITHUB_STEP_SUMMARY
