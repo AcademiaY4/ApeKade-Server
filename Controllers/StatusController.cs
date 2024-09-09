@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 
+namespace apekade.Controllers;
+
 [Route("api/[controller]")]
 [ApiController]
 // [Authorize]

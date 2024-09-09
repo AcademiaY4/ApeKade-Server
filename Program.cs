@@ -29,7 +29,7 @@ app.MapControllers();
 app.MapGet("/",()=> new ApiRes<object>{
     Status = "Success",
     Code = 200,
-    Data = new { Message = "Server Online" }
+    Data = new { Message = "Server_Online" }
 });
 
 app.Run();

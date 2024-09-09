@@ -39,6 +39,6 @@ jobs:
           echo '🔧 **Build Status**: The Docker image has been successfully built and pushed.' >> $GITHUB_STEP_SUMMARY
           echo '' >> $GITHUB_STEP_SUMMARY
           echo '🛠️ **Build Context**: .' >> $GITHUB_STEP_SUMMARY
-          echo '📦 **Image Tag**: ${{ secrets.DOCKERHUB_USERNAME }}/apekade_admin:latest' >> $GITHUB_STEP_SUMMARY
+          echo '📦 **Image Tag**: ${{ secrets.DOCKERHUB_USERNAME }}/apekade_server:latest' >> $GITHUB_STEP_SUMMARY
           echo '' >> $GITHUB_STEP_SUMMARY
           echo '🎉 **Thanks for using GitHub Actions!**' >> $GITHUB_STEP_SUMMARY
