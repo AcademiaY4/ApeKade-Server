@@ -23,11 +23,11 @@ jobs:
         run: dotnet build ./backend.sln --configuration Release --no-restore
 
       - name: Publish
-        run: dotnet publish ./backend.sln --configuration Release --no-build --output './publish''
+        run: dotnet publish ./backend.sln --configuration Release --no-build --output './publish'
 
       - name: Deploy to Azure
         uses: azure/webapps-deploy@v2
         with:
           app-name: apekade-server
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: "./publish"
+          package: './publish'
