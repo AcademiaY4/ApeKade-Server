@@ -1,20 +1,23 @@
-# Use the official .NET SDK image to build the app
-FROM mcr.microsoft.com/dotnet/sdk:8.0
+﻿FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+USER $APP_UID
 WORKDIR /app
+EXPOSE 8080
+EXPOSE 8081
 
-# Copy csproj and restore any dependencies (via NuGet)
-COPY *.csproj ./
-RUN dotnet restore
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+ARG BUILD_CONFIGURATION=Release
+WORKDIR /src
+COPY ["apekade.csproj", "./"]
+RUN dotnet restore "apekade.csproj"
+COPY . .
+WORKDIR "/src/"
+RUN dotnet build "apekade.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-# Copy the entire project and build the app
-COPY . ./
-RUN dotnet publish -c Release -o out
+FROM build AS publish
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "apekade.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
-# Use the official .NET runtime image to run the app
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+FROM base AS final
 WORKDIR /app
-COPY --from=build /app/out .
-
-# Expose port 80 and define the entry point
-EXPOSE 80
-ENTRYPOINT ["dotnet", "YourApp.dll"]
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "apekade.dll"]

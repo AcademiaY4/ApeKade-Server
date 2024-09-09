@@ -31,3 +31,17 @@ jobs:
           app-name: apekade-server
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: './publish'
+      
+      - name: Deploy Summary
+        run: |
+          echo '### 🚀 Build and Deploy Summary' > $GITHUB_STEP_SUMMARY
+          echo '' >> $GITHUB_STEP_SUMMARY
+          echo '🔧 **Build Status**: The app has been successfully built.' >> $GITHUB_STEP_SUMMARY
+          echo '🚀 **Deploy Status**: The app has been successfully deployed to Azure.' >> $GITHUB_STEP_SUMMARY
+          echo '' >> $GITHUB_STEP_SUMMARY
+          echo '🛠️ **Solution**: backend.sln' >> $GITHUB_STEP_SUMMARY
+          echo '📦 **Build Configuration**: Release' >> $GITHUB_STEP_SUMMARY
+          echo '📂 **Output Directory**: ./publish' >> $GITHUB_STEP_SUMMARY
+          echo '🌍 **Azure App Name**: apekade-server' >> $GITHUB_STEP_SUMMARY
+          echo '' >> $GITHUB_STEP_SUMMARY
+          echo '🎉 **Thanks for using GitHub Actions!**' >> $GITHUB_STEP_SUMMARY
