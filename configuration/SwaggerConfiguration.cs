@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+namespace apekade.Configuration;
 
 public static class SwaggerConfiguration
 {

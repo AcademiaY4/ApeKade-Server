@@ -1,10 +1,10 @@
+using apekade.Configuration;
+using apekade.Dto;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddEndpointsApiExplorer();
-
 //the service configs are handled
-ServiceConfiguration.Configure(builder.Services,builder.Configuration);
+ServiceConfiguration.Configure(builder.Services, builder.Configuration);
 
 var app = builder.Build();
 
@@ -26,8 +26,9 @@ app.UseHttpsRedirection();
 app.MapControllers();
 
 // root server online status
-app.MapGet("/",()=> new ApiRes<object>{
-    Status = "Success",
+app.MapGet("/", () => new ApiRes<object>
+{
+    Status = true,
     Code = 200,
     Data = new { Message = "Server_Online" }
 });

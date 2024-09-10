@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+namespace apekade.Configuration;
 
 public static class CorsConfiguration
 {

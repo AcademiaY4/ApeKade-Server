@@ -1,6 +1,8 @@
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using apekade.Models;
 
+namespace apekade.Data;
 public class DbContext{
     private readonly IMongoDatabase _database;
 
@@ -10,5 +12,5 @@ public class DbContext{
         _database = client.GetDatabase(settings.DatabaseName);
     }
     //include all the mongo collections 
-    //  public IMongoCollection<User> Users => _database.GetCollection<User>("Users");
+     public IMongoCollection<User> Users => _database.GetCollection<User>("Users");
 }
