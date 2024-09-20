@@ -30,7 +30,7 @@ app.MapGet("/", () => new ApiRes<object>
 {
     Status = true,
     Code = 200,
-    Data = new { Message = "Server_Online" }
+    Data = new { Message = "Server Online" }
 });
 
 app.Run();
