@@ -28,8 +28,8 @@ jobs:
       - name: Deploy to Azure
         uses: azure/webapps-deploy@v2
         with:
-          app-name: apekade-server
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          app-name: apekadeserver
+          publish-profile: ${{ secrets.AWPP }}
           package: './publish'
       
       - name: Deploy Summary
