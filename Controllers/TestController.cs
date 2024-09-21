@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using apekade.Dto;
+using apekade.Models.Dto;
 using Microsoft.AspNetCore.Authorization;
 
 namespace apekade.Controllers;

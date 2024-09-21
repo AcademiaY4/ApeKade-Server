@@ -1,4 +1,4 @@
-namespace apekade.Dto.UserDto;
+namespace apekade.Models.Dto.UserDto;
 
 public class UserTokenResDto
 {

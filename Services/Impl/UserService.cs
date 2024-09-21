@@ -1,10 +1,10 @@
 using AutoMapper;
 using apekade.Models;
-using apekade.Dto;
+using apekade.Models.Dto;
 using apekade.Repositories;
 using apekade.Helpers;
 using apekade.Services.Impl;
-using apekade.Dto.UserDto;
+using apekade.Models.Dto.UserDto;
 
 namespace apekade.Services.Impl;
 
@@ -34,7 +34,7 @@ public class UserService : IUserService
             newUser.PasswordHash = passwordHash;
             newUser.PasswordSalt = passwordSalt;
 
-            await _userRepository.save(newUser);
+            await _userRepository.Save(newUser);
 
             var token = _generateJwtToken.GenerateJwt(newUser);
 

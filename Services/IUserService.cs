@@ -1,5 +1,5 @@
-using apekade.Dto;
-using apekade.Dto.UserDto;
+using apekade.Models.Dto;
+using apekade.Models.Dto.UserDto;
 
 namespace apekade.Services;
 

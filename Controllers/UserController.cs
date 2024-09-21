@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using apekade.Enums;
 using apekade.Services;
-using apekade.Dto.UserDto;
+using apekade.Models.Dto.UserDto;
 
 namespace apekade.Controllers;
 

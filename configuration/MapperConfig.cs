@@ -1,6 +1,6 @@
 using AutoMapper;
 using apekade.Models;
-using apekade.Dto.UserDto;
+using apekade.Models.Dto.UserDto;
 
 namespace apekade.Configuration;
 

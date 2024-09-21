@@ -12,7 +12,7 @@ public class UserRepository
         _usersCollection = database.GetCollection<User>("Users");
     }
 
-    public async Task save(User user)
+    public async Task Save(User user)
     {
         await _usersCollection.InsertOneAsync(user);
     }

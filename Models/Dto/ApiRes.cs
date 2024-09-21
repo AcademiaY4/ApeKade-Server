@@ -1,4 +1,4 @@
-namespace apekade.Dto;
+namespace apekade.Models.Dto;
 
 public class ApiRes<T>{
     public Boolean? Status {get;set;}

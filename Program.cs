@@ -1,5 +1,5 @@
 using apekade.Configuration;
-using apekade.Dto;
+using apekade.Models.Dto;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,7 +30,7 @@ app.MapGet("/", () => new ApiRes<object>
 {
     Status = true,
     Code = 200,
-    Data = new { Message = "Server Online" }
+    Data = new { Message = "server_online" }
 });
 
 app.Run();
