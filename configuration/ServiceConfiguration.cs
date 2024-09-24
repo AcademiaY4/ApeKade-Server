@@ -1,6 +1,6 @@
 using System.Reflection;
-using apekade.Models.Dto.UserDto;
 using apekade.Helpers;
+using apekade.Models.Filter;
 using apekade.Repositories;
 using apekade.Services;
 using apekade.Services.Impl;
@@ -15,7 +15,17 @@ public static class ServiceConfiguration
     public static void Configure(IServiceCollection services, IConfiguration configuration)
     {
         // Add controllers
-        services.AddControllers();
+        services.AddControllers(
+            // add custom exception filter
+            // cfg=>{
+            //     cfg.Filters.Add(typeof(ExceptionFilter));
+            // }
+        ).ConfigureApiBehaviorOptions(options =>{
+            //disables the default behaviour of the [ApiController] 
+             options.SuppressModelStateInvalidFilter = true;
+        }).AddFluentValidation(v=>{
+            v.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+        });
 
         // Add services to the container.
         services.AddEndpointsApiExplorer();
@@ -25,9 +35,10 @@ public static class ServiceConfiguration
 
         // Register services
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IAuthService, AuthService>();
 
         // register helpers with DI
-        services.AddScoped<GenerateJwtToken>();
+        services.AddScoped<JwtHelper>();
 
         // register repositories
         services.AddScoped<UserRepository>();

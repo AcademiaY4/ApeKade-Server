@@ -12,7 +12,6 @@ public class User{
     public string? LastName { get; set; }
     public required string Email { get; set; }
     public required string PasswordHash { get; set; }
-    public required string PasswordSalt { get; set; }
     [BsonRepresentation((BsonType.String))]
     public required Role Role { get; set; }
 }

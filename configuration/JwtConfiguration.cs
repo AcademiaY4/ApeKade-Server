@@ -1,4 +1,5 @@
 using System.Text;
+using apekade.Models.Response;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Filters;
@@ -27,27 +28,37 @@ public static class JwtConfiguration
             {
                 OnChallenge = context =>
                 {
-                    // If the token is missing, return a custom message
-                    if (string.IsNullOrEmpty(context.Request.Headers.Authorization))
-                    {
-                        context.HandleResponse();
-                        context.Response.StatusCode = 401;
-                        context.Response.ContentType = "application/json";
-                        return context.Response.WriteAsync("{\"error\": \"Authorization header is missing. Please provide a valid Bearer token.\"}");
-                    }
+                    context.HandleResponse(); // Suppress the default response
 
-                    // Handle invalid token case (for example, token is present but invalid)
-                    context.HandleResponse();
+                    // Create the custom response
                     context.Response.StatusCode = 401;
                     context.Response.ContentType = "application/json";
-                    return context.Response.WriteAsync("{\"error\": \"You are not authorized to access this resource. Invalid or missing token.\"}");
+                    var response = new ErrorRes
+                    {
+                        Status = false,
+                        Code = 401,
+                        Message = string.IsNullOrEmpty(context.Request.Headers.Authorization)
+                                  ? "Authorization header is missing."
+                                  : "Invalid or missing token.",
+                        Data = new { }
+                    };
+                    return context.Response.WriteAsync(response.ToString());
+                    // return context.Response.WriteAsync(JsonSerializer.Serialize(response));
                 },
                 OnForbidden = context =>
-                {
-                    context.Response.StatusCode = 403;
-                    context.Response.ContentType = "application/json";
-                    return context.Response.WriteAsync("{\"error\": \"You do not have access to this resource.\"}");
-                }
+               {
+                   context.Response.StatusCode = 403;
+                   context.Response.ContentType = "application/json";
+                   var response = new ErrorRes
+                   {
+                       Status = false,
+                       Code = 403,
+                       Message = "You do not have access to this resource.",
+                       Data = new { }
+                   };
+                   return context.Response.WriteAsync(response.ToString());
+                   //    return context.Response.WriteAsync(JsonSerializer.Serialize(response));
+               }
             };
         });
         // Configure Swagger to handle JWT Bearer token

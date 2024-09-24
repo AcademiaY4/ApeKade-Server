@@ -1,5 +1,5 @@
 using apekade.Configuration;
-using apekade.Models.Dto;
+using apekade.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,16 +20,20 @@ app.UseCors();
 // defined cors option
 // app.UseCors("AllowAll");
 
-app.UseHttpsRedirection();
+// comented to avoid redirect to https in not secure servers.
+// app.UseHttpsRedirection();
+
+// use Custom middlewares
+app.UseMiddleware<ExceptionMiddleware>();
+// app.UseMiddleware<ValidationMiddleware>();
 
 // mapping controllers
 app.MapControllers();
 
 // root server online status
-app.MapGet("/", () => new ApiRes<object>
-{
-    Status = true,
+app.MapGet("/", () => new {
     Code = 200,
+    Status = true,
     Data = new { Message = "server_online" }
 });
 

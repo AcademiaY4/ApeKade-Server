@@ -13,12 +13,7 @@ public class TestController : ControllerBase
     [HttpGet]
     public IActionResult GetServerStatus()
     {
-        var response = new ApiRes<object>{
-            Status = true,
-            Code= 200,
-            Data = new { Message = "Server Online" }
-        };
-        return Ok(response);
+        return this.ApiRes(200, true, "Server Online", new { Msg = "Server Online" });
 
     }
     // Only SuperAdmin can access this endpoint
@@ -26,7 +21,7 @@ public class TestController : ControllerBase
     [HttpGet("superadmin")]
     public IActionResult SuperAdminOnly()
     {
-        return Ok("Only SuperAdmin can access this.");
+        return this.ApiRes(200, true, "Only SuperAdmin can access this.", new {});
     }
 
     // Only Seller can access this endpoint
@@ -34,7 +29,7 @@ public class TestController : ControllerBase
     [HttpGet("seller")]
     public IActionResult SellerOnly()
     {
-        return Ok("Only Sellers can access this.");
+        return this.ApiRes(200, true, "Only Sellers can access this.", new {});
     }
 
     // Only Buyer can access this endpoint
@@ -42,7 +37,7 @@ public class TestController : ControllerBase
     [HttpGet("buyer")]
     public IActionResult BuyerOnly()
     {
-        return Ok("Only Buyers can access this.");
+        return this.ApiRes(200, true, "Only Buyers can access this.", new {});
     }
 
     // Both Seller and Buyer can access this endpoint
@@ -50,7 +45,7 @@ public class TestController : ControllerBase
     [HttpGet("seller-buyer")]
     public IActionResult SellerAndBuyerAccess()
     {
-        return Ok("Both Sellers and Buyers can access this.");
+        return this.ApiRes(200, true, "Both Sellers and Buyers can access this.", new {});
     }
 
     // Any authenticated user can access this endpoint
@@ -58,13 +53,13 @@ public class TestController : ControllerBase
     [HttpGet("common")]
     public IActionResult CommonAccess()
     {
-        return Ok("Any authenticated user can access this.");
+        return this.ApiRes(200, true, "Any authenticated user can access this.", new {});
     }
-    
+
     // Any one can access this endpoint
     [HttpGet("open")]
     public IActionResult OpenAccess()
     {
-        return Ok("Any one can access this.");
+        return this.ApiRes(200, true, "Anyone can access this.", new {});
     }
 }
