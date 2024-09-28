@@ -11,10 +11,10 @@ namespace apekade.Services.Impl;
 public class AuthService : IAuthService
 {
     private readonly IMapper _mapper;
-    private readonly UserRepository _userRepository;
+    private readonly IUserRepo _userRepository;
     private readonly JwtHelper _jwtHelper;
 
-    public AuthService(IMapper mapper, UserRepository userRepository, JwtHelper jwtHelper)
+    public AuthService(IMapper mapper, IUserRepo userRepository, JwtHelper jwtHelper)
     {
         _mapper = mapper;
         _userRepository = userRepository;
@@ -31,8 +31,11 @@ public class AuthService : IAuthService
         {
             return new ApiRes(403, false, "Password incorrect", new { });
         }
+
+        var loginResDto = _mapper.Map<LoginResDto>(user);
+
         var token = _jwtHelper.GenerateJwt(user);
-        return new ApiRes(200, true, "login succcess", new { user, token });
+        return new ApiRes(200, true, "login succcess", new { loginResDto, token });
     }
 
     public async Task<ApiRes> Register(RegisterDto registerDto)
@@ -52,7 +55,7 @@ public class AuthService : IAuthService
             }
             var newUser = _mapper.Map<User>(registerDto);
             newUser.PasswordHash = HashPassword.CreatePasswordHash(registerDto.Password);
-            await _userRepository.Save(newUser);
+            await _userRepository.CreateNewUser(newUser);
             var token = _jwtHelper.GenerateJwt(newUser);
             var userResponse = _mapper.Map<RegisterResDto>(newUser);
 

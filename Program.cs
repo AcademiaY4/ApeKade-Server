@@ -24,6 +24,7 @@ app.UseCors();
 // app.UseHttpsRedirection();
 
 // use Custom middlewares
+app.UseMiddleware<EndpointException>();
 app.UseMiddleware<ExceptionMiddleware>();
 // app.UseMiddleware<ValidationMiddleware>();
 
@@ -34,7 +35,7 @@ app.MapControllers();
 app.MapGet("/", () => new {
     Code = 200,
     Status = true,
-    Data = new { Message = "server_online" }
+    Data = new { Message = "server Online" }
 });
 
 app.Run();
