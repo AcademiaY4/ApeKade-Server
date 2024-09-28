@@ -36,12 +36,16 @@ public static class ServiceConfiguration
         // Register services
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IAdminService, AdminService>();
+        services.AddScoped<IBuyerService, BuyerService>();
+        services.AddScoped<ICsrService, CsrService>();
+        services.AddScoped<IVendorService, VendorService>();
 
         // register helpers with DI
         services.AddScoped<JwtHelper>();
 
         // register repositories
-        services.AddScoped<UserRepository>();
+        services.AddScoped<IUserRepo,UserRepo>();
 
         // Register IMongoClient
         services.AddSingleton<IMongoClient>(sp =>
