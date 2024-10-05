@@ -15,7 +15,7 @@ public static class CorsConfiguration
             // });
             options.AddDefaultPolicy(builder =>
             {
-                builder.WithOrigins("http://localhost:3000/")
+                builder.WithOrigins("http://localhost:3000","http://localhost:5173","https://apekade-admin.netlify.app")
                        .AllowAnyHeader()
                        .AllowAnyMethod();
             });
