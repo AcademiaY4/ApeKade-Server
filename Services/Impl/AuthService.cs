@@ -35,7 +35,7 @@ public class AuthService : IAuthService
         var loginResDto = _mapper.Map<LoginResDto>(user);
 
         var token = _jwtHelper.GenerateJwt(user);
-        return new ApiRes(200, true, "login succcess", new { loginResDto, token });
+        return new ApiRes(200, true, "login succcess", new { access_token=token ,user=loginResDto,role=loginResDto.Role});
     }
 
     public async Task<ApiRes> Register(RegisterDto registerDto)
@@ -63,7 +63,7 @@ public class AuthService : IAuthService
                 201,
                 true,
                 "User created successfully!",
-                new { userResponse, token }
+                new { access_token=token,user=userResponse }
             );
         }
         catch (Exception ex)
