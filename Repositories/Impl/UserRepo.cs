@@ -57,27 +57,33 @@ public class UserRepo : IUserRepo
     //method to add rating for  vendor
     public async Task AddVendorRating(User vendor)
     {
-        await _users.ReplaceOneAsync(u=>u.Id == vendor.Id,vendor);
+        await _users.ReplaceOneAsync(u => u.Id == vendor.Id, vendor);
     }
 
     // Method to approve customer accounts
     public async Task ApproveUserAccount(string userId)
     {
-        var update = Builders<User>.Update.Set(u => u.Status, Models.Enums.Status.ACTIVE);
+        var update = Builders<User>.Update
+                                    .Set(u => u.Status, Models.Enums.Status.ACTIVE)
+                                    .Set(u => u.IsApproved, true);
         await _users.UpdateOneAsync(u => u.Id == userId, update);
     }
 
     // Method to deactivate a user account
     public async Task DeactivateAccount(string userId)
     {
-        var update = Builders<User>.Update.Set(u => u.Status, Models.Enums.Status.DEACTIVATED);
+        var update = Builders<User>.Update
+                                    .Set(u => u.Status, Models.Enums.Status.DEACTIVATED)
+                                    .Set(u => u.IsApproved, false);
         await _users.UpdateOneAsync(u => u.Id == userId, update);
     }
 
     // Method to reactivate a user account
     public async Task ReactivateAccount(string userId)
     {
-        var update = Builders<User>.Update.Set(u => u.Status, Models.Enums.Status.ACTIVE);
+        var update = Builders<User>.Update
+                                    .Set(u => u.Status, Models.Enums.Status.ACTIVE)
+                                    .Set(u => u.IsApproved, true);
         await _users.UpdateOneAsync(u => u.Id == userId, update);
     }
     //mehtod to delete user
