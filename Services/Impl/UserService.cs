@@ -6,6 +6,7 @@ using apekade.Helpers;
 using apekade.Services.Impl;
 using apekade.Models.Dto.VendorDto;
 using apekade.Models.Dto.UserDto;
+using System;
 
 namespace apekade.Services.Impl;
 
@@ -43,4 +44,31 @@ public class UserService : IUserService
     {
         throw new NotImplementedException();
     }
+    public async Task<ApiRes> GetAllUsers(){
+        try
+        {
+            var users = await _userRepository.GetAllUsers();
+            var userResDto = _mapper.Map<List<GetUserResDto>>(users);
+
+            // Calculate user counts
+            var activeCount = users.Count(u => u.Status == Models.Enums.Status.ACTIVE);
+            var pendingCount = users.Count(u => u.Status == Models.Enums.Status.PENDING);
+            var deactivatedCount = users.Count(u => u.Status == Models.Enums.Status.DEACTIVATED);
+            var totalUsers = users.Count;
+
+            return new ApiRes(200, true, "Users fethed", new
+            {
+                users = userResDto,
+                activeUsers = activeCount,
+                pendingUsers = pendingCount,
+                deactiveUsers = deactivatedCount,
+                totalUsers
+            });
+        }
+        catch (Exception ex)
+        {
+            return new ApiRes(500, false, ex.Message, new { });
+        }
+    }
+
 }

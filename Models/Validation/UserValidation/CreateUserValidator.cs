@@ -1,5 +1,5 @@
 using System;
-using apekade.Enums;
+using apekade.Models.Enums;
 using apekade.Models.Dto.UserDto;
 using FluentValidation;
 

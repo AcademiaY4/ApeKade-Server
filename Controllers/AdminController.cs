@@ -57,7 +57,7 @@ public class AdminController : ControllerBase
         return this.ApiRes(response.Code, response.Status, response.Message, response.Data);
     }
 
-    [HttpPost("deactivate-user/{userId}")]
+    [HttpGet("deactivate-user/{userId}")]
     public async Task<IActionResult> DeactivateUser(string userId)
     {
         if (!ObjectId.TryParse(userId, out var objectId))
@@ -67,9 +67,12 @@ public class AdminController : ControllerBase
         return this.ApiRes(response.Code, response.Status, response.Message, response.Data);
     }
 
-    [HttpPost("reactivate-user/{userId}")]
-    public async Task<IActionResult> ReactivateUser(string userId)
+    [HttpGet("activate-user/{userId}")]
+    public async Task<IActionResult> ActivateUser(string userId)
     {
+        if (!ObjectId.TryParse(userId, out var objectId))
+            return this.ApiRes(400, false, "invalid MongoDB ObjectId.", null);
+
         var response = await _adminService.ReactivateUser(userId);
         return this.ApiRes(response.Code, response.Status, response.Message, response.Data);
     }
@@ -84,7 +87,7 @@ public class AdminController : ControllerBase
         return this.ApiRes(response.Code, response.Status, response.Message, response.Data);
     }
 
-    [HttpGet("user/{userId}")]
+    [HttpGet("get-user/{userId}")]
     public async Task<IActionResult> GetUserById(string userId)
     {
         if (!ObjectId.TryParse(userId, out var objectId))
@@ -99,5 +102,54 @@ public class AdminController : ControllerBase
         var users = await _adminService.GetAllUsers();
         return Ok(users);
     }
+
+    [HttpPut("change-password/{userId}")]
+    public async Task<IActionResult> ChangePassword(string userId, [FromBody] ChangePasswordDto changePasswordDto)
+    {
+        // Validate the MongoDB ObjectId
+        if (!ObjectId.TryParse(userId, out var objectId))
+            return this.ApiRes(400, false, "Invalid MongoDB ObjectId.", null);
+
+        // Validate the ChangePasswordDto using FluentValidation or any other validation logic
+        var validator = new ChangePasswordValidator();
+        var result = validator.Validate(changePasswordDto);
+
+        if (!result.IsValid)
+        {
+            var firstError = result.Errors.Select(e => new { error = e.ErrorMessage }).FirstOrDefault();
+            return this.ApiRes(400, false, "Validation error", firstError);
+        }
+
+        // Call the service to change the password
+        var response = await _adminService.ChangeUserPassword(userId, changePasswordDto);
+
+        // Return the response from the service
+        return this.ApiRes(response.Code, response.Status, response.Message, response.Data);
+    }
+    [HttpPut("change-password-without-check/{userId}")]
+    public async Task<IActionResult> ChangePasswordWithoutCheck(string userId, [FromBody] ChangePwdWoChkDto changePasswordDto)
+    {
+        // Validate the MongoDB ObjectId
+        if (!ObjectId.TryParse(userId, out var objectId))
+            return this.ApiRes(400, false, "Invalid MongoDB ObjectId.", null);
+
+        // Validate the ChangePasswordDto using FluentValidation or any other validation logic
+        var validator = new ChangePwdWoChkValidator();
+        var result = validator.Validate(changePasswordDto);
+
+        if (!result.IsValid)
+        {
+            var firstError = result.Errors.Select(e => new { error = e.ErrorMessage }).FirstOrDefault();
+            return this.ApiRes(400, false, "Validation error", firstError);
+        }
+
+        // Call the service to change the password
+        var response = await _adminService.ChangePwdWoChk(userId, changePasswordDto);
+
+        // Return the response from the service
+        return this.ApiRes(response.Code, response.Status, response.Message, response.Data);
+    }
+
+
 }
 

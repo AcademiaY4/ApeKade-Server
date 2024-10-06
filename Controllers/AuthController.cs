@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using apekade.Enums;
+using apekade.Models.Enums;
 using apekade.Services;
 using apekade.Models.Dto.AuthDto;
 using apekade.Models.Dto;
