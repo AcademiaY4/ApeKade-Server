@@ -26,6 +26,9 @@ public class AdminService : IAdminService
             if (existingUser != null) return new ApiRes(409, false, "User already exists.", new { });
 
             var newUser = _mapper.Map<User>(createUserDto);
+            // auto activate account when admin create users
+            newUser.IsApproved = true;
+
             await _adminRepository.CreateNewUser(newUser);
             return new ApiRes(201, true, "User created successfully", new { });
         }
@@ -81,8 +84,13 @@ public class AdminService : IAdminService
             var deactivatedCount = users.Count(u => u.Status == Models.Enums.Status.DEACTIVATED);
             var totalUsers = users.Count;
 
-            return new ApiRes(200, true, "Users fethed", new{
-                users =userResDto, activeUsers=activeCount , pendingUsers = pendingCount , deactiveUsers =deactivatedCount , totalUsers
+            return new ApiRes(200, true, "Users fethed", new
+            {
+                users = userResDto,
+                activeUsers = activeCount,
+                pendingUsers = pendingCount,
+                deactiveUsers = deactivatedCount,
+                totalUsers
             });
         }
         catch (Exception ex)
