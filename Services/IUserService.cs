@@ -8,4 +8,6 @@ public interface IUserService
 {
     Task<ApiRes> GetUserById(string userId);
     Task<ApiRes> GetUserByEmail(string email);
+    Task<ApiRes> GetAllUsers();
+
 }

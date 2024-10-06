@@ -14,5 +14,4 @@ public class Rating
     [BsonRepresentation(BsonType.ObjectId)]
     public required string CustomerId { get; set; }
     public DateTime Added { get; set; } = DateTime.UtcNow;
-
 }
