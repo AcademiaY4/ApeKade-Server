@@ -11,10 +11,10 @@ namespace apekade.Services.Impl;
 public class AuthService : IAuthService
 {
     private readonly IMapper _mapper;
-    private readonly UserRepository _userRepository;
+    private readonly IUserRepo _userRepository;
     private readonly JwtHelper _jwtHelper;
 
-    public AuthService(IMapper mapper, UserRepository userRepository, JwtHelper jwtHelper)
+    public AuthService(IMapper mapper, IUserRepo userRepository, JwtHelper jwtHelper)
     {
         _mapper = mapper;
         _userRepository = userRepository;
@@ -22,17 +22,22 @@ public class AuthService : IAuthService
     }
     public async Task<ApiRes> Login(LoginDto loginDto)
     {
-        var user = await _userRepository.GetUserByEmailAndRole(loginDto.Email,loginDto.Role);
+        var user = await _userRepository.GetUserByEmailAndRole(loginDto.Email, loginDto.Role);
         if (user == null)
         {
             return new ApiRes(404, false, "user not found", new { });
         }
-       if (!HashPassword.VerifyPasswordHash(user.PasswordHash, loginDto.Password))
+        if (user.IsApproved == false)
+            return new ApiRes(403, false, "account not activated", new { });
+        if (!HashPassword.VerifyPasswordHash(user.PasswordHash, loginDto.Password))
         {
             return new ApiRes(403, false, "Password incorrect", new { });
         }
+
+        var loginResDto = _mapper.Map<LoginResDto>(user);
+
         var token = _jwtHelper.GenerateJwt(user);
-        return new ApiRes(200, true, "login succcess", new { user, token });
+        return new ApiRes(200, true, "login succcess", new { access_token = token, user = loginResDto, role = loginResDto.Role });
     }
 
     public async Task<ApiRes> Register(RegisterDto registerDto)
@@ -52,7 +57,7 @@ public class AuthService : IAuthService
             }
             var newUser = _mapper.Map<User>(registerDto);
             newUser.PasswordHash = HashPassword.CreatePasswordHash(registerDto.Password);
-            await _userRepository.Save(newUser);
+            await _userRepository.CreateNewUser(newUser);
             var token = _jwtHelper.GenerateJwt(newUser);
             var userResponse = _mapper.Map<RegisterResDto>(newUser);
 
@@ -60,7 +65,7 @@ public class AuthService : IAuthService
                 201,
                 true,
                 "User created successfully!",
-                new { userResponse, token }
+                new { access_token = token, user = userResponse }
             );
         }
         catch (Exception ex)

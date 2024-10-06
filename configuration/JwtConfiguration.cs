@@ -39,7 +39,7 @@ public static class JwtConfiguration
                         Code = 401,
                         Message = string.IsNullOrEmpty(context.Request.Headers.Authorization)
                                   ? "Authorization header is missing."
-                                  : "Invalid or missing token.",
+                                  : "Invalid or token timeout.",
                         Data = new { }
                     };
                     return context.Response.WriteAsync(response.ToString());
