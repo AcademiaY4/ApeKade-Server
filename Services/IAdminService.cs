@@ -1,5 +1,6 @@
 using System;
 using apekade.Models.Dto;
+using apekade.Models.Dto.AuthDto;
 using apekade.Models.Dto.UserDto;
 
 namespace apekade.Services;
@@ -13,6 +14,9 @@ public interface IAdminService
     Task<ApiRes> DeleteUser(string userId);
     Task<ApiRes> GetUserById(string userId);
     Task<ApiRes> GetUserByEmail(string email);
+    Task<ApiRes> ChangeUserPassword(string userId,ChangePasswordDto changePasswordDto);
+    Task<ApiRes> ChangePwdWoChk(string userId,ChangePwdWoChkDto changePwdWoChkDto);
+    
     Task<ApiRes> GetAllUsers();
 
 }

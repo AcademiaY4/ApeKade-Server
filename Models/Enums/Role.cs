@@ -1,4 +1,4 @@
-namespace apekade.Enums;
+namespace apekade.Models.Enums;
 
 public enum Role
 {
