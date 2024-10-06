@@ -10,5 +10,12 @@ public class CreateUserDto
     public string Email { get; set; }
     public string Password { get; set; } 
     public string Role { get; set; }
+    public string Telephone { get; set; }
+    public int Age { get; set; }
+    public string District { get; set; }
+    public string Province { get; set; }
+    public string City { get; set; }
+    public string ZipCode { get; set; }
+    public string Company { get; set; }
 
 }
