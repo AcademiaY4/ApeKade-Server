@@ -16,9 +16,9 @@ if (app.Environment.IsDevelopment())
 }
 
 // the default cors option
-// app.UseCors();
+app.UseCors();
 // defined cors option
-app.UseCors("AllowAll");
+// app.UseCors("AllowAll");
 
 // comented to avoid redirect to https in not secure servers.
 // app.UseHttpsRedirection();
