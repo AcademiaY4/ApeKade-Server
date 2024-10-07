@@ -15,4 +15,10 @@ public class CreateUserResDto
     // Can be 'PENDING', 'ACTIVE', or 'DEACTIVATED'
     public string Status { get; set; }
     public string DateCreated { get; set; }
+    public string Telephone { get; set; }
+    public int Age { get; set; }
+    public string District { get; set; }
+    public string Province { get; set; }
+    public string City { get; set; }
+
 }

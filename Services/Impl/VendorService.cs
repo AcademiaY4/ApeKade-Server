@@ -1,5 +1,5 @@
 using System;
-using apekade.Enums;
+using apekade.Models.Enums;
 using apekade.Models;
 using apekade.Models.Dto;
 using apekade.Models.Dto.VendorDto;

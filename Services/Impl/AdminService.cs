@@ -1,6 +1,8 @@
 using System;
+using apekade.Helpers;
 using apekade.Models;
 using apekade.Models.Dto;
+using apekade.Models.Dto.AuthDto;
 using apekade.Models.Dto.UserDto;
 using apekade.Repositories;
 using AutoMapper;
@@ -18,6 +20,58 @@ public class AdminService : IAdminService
         _adminRepository = adminRepository;
     }
 
+    public async Task<ApiRes> ChangePwdWoChk(string userId, ChangePwdWoChkDto changePwdWoChkDto)
+    {
+        try
+        {
+            // Fetch the user by userId
+            var user = await _adminRepository.GetUserById(userId);
+            if (user == null) return new ApiRes(404, false, "User not found", new { });
+
+            // Hash the new password
+            var newPasswordHash = HashPassword.CreatePasswordHash(changePwdWoChkDto.NewPassword);
+            user.PasswordHash = newPasswordHash;
+
+            // Update the user's password in the repository
+            await _adminRepository.UpdateProfile(user);
+
+            return new ApiRes(200, true, "Password changed successfully.", new { });
+        }
+        catch (Exception ex)
+        {
+            return new ApiRes(500, false, ex.Message, new { });
+        }
+    }
+
+    public async Task<ApiRes> ChangeUserPassword(string userId, ChangePasswordDto changePasswordDto)
+    {
+        try
+        {
+            // Fetch the user by userId
+            var user = await _adminRepository.GetUserById(userId);
+            if (user == null) return new ApiRes(404, false, "User not found", new { });
+
+            // Check if the current password matches
+            if (!HashPassword.VerifyPasswordHash(user.PasswordHash, changePasswordDto.OldPassword))
+            {
+                return new ApiRes(403, false, "Password incorrect", new { });
+            }
+
+            // Hash the new password
+            var newPasswordHash = HashPassword.CreatePasswordHash(changePasswordDto.NewPassword);
+            user.PasswordHash = newPasswordHash;
+
+            // Update the user's password in the repository
+            await _adminRepository.UpdateProfile(user);
+
+            return new ApiRes(200, true, "Password changed successfully.", new { });
+        }
+        catch (Exception ex)
+        {
+            return new ApiRes(500, false, ex.Message, new { });
+        }
+    }
+
     public async Task<ApiRes> CreateUser(CreateUserDto createUserDto)
     {
         try
@@ -26,6 +80,10 @@ public class AdminService : IAdminService
             if (existingUser != null) return new ApiRes(409, false, "User already exists.", new { });
 
             var newUser = _mapper.Map<User>(createUserDto);
+            // auto activate account when admin create users
+            newUser.IsApproved = true;
+            newUser.Status= Models.Enums.Status.ACTIVE;
+
             await _adminRepository.CreateNewUser(newUser);
             return new ApiRes(201, true, "User created successfully", new { });
         }
@@ -81,8 +139,13 @@ public class AdminService : IAdminService
             var deactivatedCount = users.Count(u => u.Status == Models.Enums.Status.DEACTIVATED);
             var totalUsers = users.Count;
 
-            return new ApiRes(200, true, "Users fethed", new{
-                users =userResDto, activeUsers=activeCount , pendingUsers = pendingCount , deactiveUsers =deactivatedCount , totalUsers
+            return new ApiRes(200, true, "Users fethed", new
+            {
+                users = userResDto,
+                activeUsers = activeCount,
+                pendingUsers = pendingCount,
+                deactiveUsers = deactivatedCount,
+                totalUsers
             });
         }
         catch (Exception ex)
