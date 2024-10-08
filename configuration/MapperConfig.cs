@@ -5,6 +5,7 @@ using apekade.Models.Dto.UserDto;
 using apekade.Models.Dto.VendorDto;
 using apekade.Models.Dto.BuyerDto;
 using apekade.Models.Dto.StockDto;
+using apekade.Models.Dto.CategoryDto;
 
 namespace apekade.Configuration;
 
@@ -38,6 +39,9 @@ public class MapperConfig : Profile
 
         CreateMap<CreateStockReqDto, Stock>();
         CreateMap<Stock, CreateStockResDto>();
-    
+        
+        CreateMap<CreateCategoryReqDto, Category>();
+        //CreateMap<Category, CreateCategoryResDto>();
+
     }
 }
