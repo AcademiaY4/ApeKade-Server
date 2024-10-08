@@ -1,3 +1,9 @@
+// ------------------------------------------------------------
+// File: AdminService.cs
+// Description: Implementation of admin service actions, managing user accounts and details
+// Author: Shabeer M.S.M.
+// ------------------------------------------------------------
+
 using System;
 using apekade.Helpers;
 using apekade.Models;
@@ -20,6 +26,7 @@ public class AdminService : IAdminService
         _adminRepository = adminRepository;
     }
 
+    // Method to change the user's password without checking the old password
     public async Task<ApiRes> ChangePwdWoChk(string userId, ChangePwdWoChkDto changePwdWoChkDto)
     {
         try
@@ -43,6 +50,7 @@ public class AdminService : IAdminService
         }
     }
 
+    // Method to change the user's password with old password verification
     public async Task<ApiRes> ChangeUserPassword(string userId, ChangePasswordDto changePasswordDto)
     {
         try
@@ -72,6 +80,7 @@ public class AdminService : IAdminService
         }
     }
 
+    // Method to create a new user
     public async Task<ApiRes> CreateUser(CreateUserDto createUserDto)
     {
         try
@@ -80,9 +89,9 @@ public class AdminService : IAdminService
             if (existingUser != null) return new ApiRes(409, false, "User already exists.", new { });
 
             var newUser = _mapper.Map<User>(createUserDto);
-            // auto activate account when admin create users
+            // Auto activate account when admin creates users
             newUser.IsApproved = true;
-            newUser.Status= Models.Enums.Status.ACTIVE;
+            newUser.Status = Models.Enums.Status.ACTIVE;
 
             await _adminRepository.CreateNewUser(newUser);
             return new ApiRes(201, true, "User created successfully", new { });
@@ -93,6 +102,7 @@ public class AdminService : IAdminService
         }
     }
 
+    // Method to deactivate a user
     public async Task<ApiRes> DeactivateUser(string userId)
     {
         try
@@ -109,6 +119,7 @@ public class AdminService : IAdminService
         }
     }
 
+    // Method to delete a user
     public async Task<ApiRes> DeleteUser(string userId)
     {
         try
@@ -118,7 +129,6 @@ public class AdminService : IAdminService
 
             await _adminRepository.DeleteUser(userId);
             return new ApiRes(200, true, "User deleted", new { });
-
         }
         catch (Exception ex)
         {
@@ -126,6 +136,7 @@ public class AdminService : IAdminService
         }
     }
 
+    // Method to get all users
     public async Task<ApiRes> GetAllUsers()
     {
         try
@@ -139,7 +150,7 @@ public class AdminService : IAdminService
             var deactivatedCount = users.Count(u => u.Status == Models.Enums.Status.DEACTIVATED);
             var totalUsers = users.Count;
 
-            return new ApiRes(200, true, "Users fethed", new
+            return new ApiRes(200, true, "Users fetched", new
             {
                 users = userResDto,
                 activeUsers = activeCount,
@@ -154,11 +165,12 @@ public class AdminService : IAdminService
         }
     }
 
+    // Method to get a user by their email
     public async Task<ApiRes> GetUserByEmail(string email)
     {
         try
         {
-            var user = await _adminRepository.GetUserById(email);
+            var user = await _adminRepository.GetUserByEmail(email);
             if (user == null) return new ApiRes(404, false, "User not found", new { });
 
             var userRes = _mapper.Map<GetUserResDto>(user);
@@ -170,6 +182,7 @@ public class AdminService : IAdminService
         }
     }
 
+    // Method to get a user by their ID
     public async Task<ApiRes> GetUserById(string userId)
     {
         try
@@ -186,6 +199,7 @@ public class AdminService : IAdminService
         }
     }
 
+    // Method to reactivate a user
     public async Task<ApiRes> ReactivateUser(string userId)
     {
         try
@@ -202,6 +216,7 @@ public class AdminService : IAdminService
         }
     }
 
+    // Method to update user details
     public async Task<ApiRes> UpdateUser(string id, UpdateUserDto updateUserDto)
     {
         try

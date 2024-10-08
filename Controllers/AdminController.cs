@@ -1,3 +1,10 @@
+// ------------------------------------------------------------
+// File: AdminController.cs
+// Description: This file contains the AdminController class,
+//              which manages user-related actions for admin users.
+// Author: Shabeer M.S.M.
+// ------------------------------------------------------------
+
 using apekade.Models.Dto;
 using apekade.Models.Dto.UserDto;
 using apekade.Models.Validation;
@@ -16,11 +23,14 @@ namespace apekade.Controllers;
 public class AdminController : ControllerBase
 {
     private readonly IAdminService _adminService;
+
+    // Constructor to initialize the AdminService
     public AdminController(IAdminService adminService)
     {
         _adminService = adminService;
     }
 
+    // Method to create a new user
     [HttpPost("create-user")]
     public async Task<IActionResult> CreateUser([FromBody] CreateUserDto createUserDto)
     {
@@ -37,6 +47,7 @@ public class AdminController : ControllerBase
         return this.ApiRes(response.Code, response.Status, response.Message, response.Data);
     }
 
+    // Method to update an existing user by ID
     [HttpPut("update-user/{id}")]
     public async Task<IActionResult> UpdateUser(string id, [FromBody] UpdateUserDto updateUserDto)
     {
@@ -57,6 +68,7 @@ public class AdminController : ControllerBase
         return this.ApiRes(response.Code, response.Status, response.Message, response.Data);
     }
 
+    // Method to deactivate a user by ID
     [HttpGet("deactivate-user/{userId}")]
     public async Task<IActionResult> DeactivateUser(string userId)
     {
@@ -67,6 +79,7 @@ public class AdminController : ControllerBase
         return this.ApiRes(response.Code, response.Status, response.Message, response.Data);
     }
 
+    // Method to activate a user by ID
     [HttpGet("activate-user/{userId}")]
     public async Task<IActionResult> ActivateUser(string userId)
     {
@@ -77,6 +90,7 @@ public class AdminController : ControllerBase
         return this.ApiRes(response.Code, response.Status, response.Message, response.Data);
     }
 
+    // Method to delete a user by ID
     [HttpDelete("delete-user/{userId}")]
     public async Task<IActionResult> DeleteUser(string userId)
     {
@@ -87,6 +101,7 @@ public class AdminController : ControllerBase
         return this.ApiRes(response.Code, response.Status, response.Message, response.Data);
     }
 
+    // Method to get a user by ID
     [HttpGet("get-user/{userId}")]
     public async Task<IActionResult> GetUserById(string userId)
     {
@@ -96,6 +111,7 @@ public class AdminController : ControllerBase
         return this.ApiRes(response.Code, response.Status, response.Message, response.Data);
     }
 
+    // Method to get all users
     [HttpGet("all-users")]
     public async Task<IActionResult> GetAllUsers()
     {
@@ -103,6 +119,7 @@ public class AdminController : ControllerBase
         return Ok(users);
     }
 
+    // Method to change a user's password
     [HttpPut("change-password/{userId}")]
     public async Task<IActionResult> ChangePassword(string userId, [FromBody] ChangePasswordDto changePasswordDto)
     {
@@ -126,6 +143,8 @@ public class AdminController : ControllerBase
         // Return the response from the service
         return this.ApiRes(response.Code, response.Status, response.Message, response.Data);
     }
+
+    // Method to change a user's password without checking
     [HttpPut("change-password-without-check/{userId}")]
     public async Task<IActionResult> ChangePasswordWithoutCheck(string userId, [FromBody] ChangePwdWoChkDto changePasswordDto)
     {
@@ -149,7 +168,4 @@ public class AdminController : ControllerBase
         // Return the response from the service
         return this.ApiRes(response.Code, response.Status, response.Message, response.Data);
     }
-
-
 }
-
