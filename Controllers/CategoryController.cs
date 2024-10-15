@@ -10,6 +10,7 @@ using apekade.Models.Dto;
 using apekade.Models.Dto.CategoryDto;
 using apekade.Services;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 
 namespace apekade.Controllers;
 
@@ -29,14 +30,19 @@ public class CategoryController : ControllerBase
   public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryReqDto createCategoryReqDto)
   {
     var response = await _categoryService.CreateCategory(createCategoryReqDto);
+    Console.WriteLine(createCategoryReqDto.ToString());
     return this.ApiRes(response.Code, response.Status, response.Message, response.Data);
   }
 
   // Method to edit an existing category
-  [HttpPut("edit")]
-  public async Task<IActionResult> EditCategory([FromBody] UpdateCategoryReqDto updateCategoryReqDto)
+  [HttpPut("edit/{id}")]
+  public async Task<IActionResult> EditCategory(string id, [FromBody] UpdateCategoryReqDto updateCategoryReqDto)
   {
-    var response = await _categoryService.EditCategory(updateCategoryReqDto);
+    if (!ObjectId.TryParse(id, out var objectId))
+      return this.ApiRes(400, false, "invalid MongoDB ObjectId.", null);
+    
+
+    var response = await _categoryService.EditCategory(id, updateCategoryReqDto);
     return this.ApiRes(response.Code, response.Status, response.Message, response.Data);
   }
 
@@ -79,5 +85,19 @@ public class CategoryController : ControllerBase
     var response = await _categoryService.DeactivateCategory(id);
     return this.ApiRes(response.Code, response.Status, response.Message, response.Data);
   }
+
+  [HttpPut("update-noofproducts")]
+  public async Task<IActionResult> UpdateNoOfProducts([FromBody] UpdateNoOfProductsReqDto updateNoOfProductsReqDto)
+  {
+    if (!ObjectId.TryParse(updateNoOfProductsReqDto.CategoryId, out var categoryId) ||
+        !ObjectId.TryParse(updateNoOfProductsReqDto.SubCategoryId, out var subCategoryId))
+    {
+      return this.ApiRes(400, false, "Invalid MongoDB ObjectId.", null);
+    }
+
+    var response = await _categoryService.UpdateNoOfProducts(updateNoOfProductsReqDto);
+    return this.ApiRes(response.Code, response.Status, response.Message, response.Data);
+  }
+
 }
 

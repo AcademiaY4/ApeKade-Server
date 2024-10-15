@@ -21,7 +21,7 @@ public interface ICategoryService
   Task<ApiRes> AddSubCategories(AddSubCategoriesReqDto addSubCategoriesReqDto);
 
   // Method to update an existing category
-  Task<ApiRes> EditCategory(UpdateCategoryReqDto updateCategoryReqDto);
+  Task<ApiRes> EditCategory(string id, UpdateCategoryReqDto updateCategoryReqDto);
 
   // Method to retrieve all categories
   Task<ApiRes> GetAllCategories();
@@ -37,5 +37,7 @@ public interface ICategoryService
 
   // Method to deactivate a category by its ID (set its status to inactive)
   Task<ApiRes> DeactivateCategory(string categoryId);
+
+  Task<ApiRes> UpdateNoOfProducts(UpdateNoOfProductsReqDto updateNoOfProductsReqDto);
 }
 

@@ -36,7 +36,14 @@ public class StockService : IStockService
   {
     try
     {
-      var newStock = _mapper.Map<Stock>(createStockReqDto);
+      var newStock = new Stock
+      {
+        Id = createStockReqDto.ProductId,
+        ProductId = createStockReqDto.ProductId,
+        SubCategory = createStockReqDto.SubCategory,
+        Category = createStockReqDto.Category,
+        Quantity = createStockReqDto.Quantity,
+      };
       await _stocks.InsertOneAsync(newStock);
       return new ApiRes(201, true, "Stock created successfully", new { });
     }
@@ -57,10 +64,76 @@ public class StockService : IStockService
         return new ApiRes(404, false, "Stock not found", new { });
       }
 
-      // Map updated fields
-      _mapper.Map(updateStockReqDto, stock);
-      await _stocks.ReplaceOneAsync(s => s.Id == stockId, stock);
+      var updatedStock = new Stock
+      {
+        Id = stock.Id,
+        ProductId = stock.ProductId,
+        SubCategory = updateStockReqDto.SubCategory,
+        Category = updateStockReqDto.Category,
+        Quantity = stock.Quantity,
+        LowStockAlert = stock.LowStockAlert
+      };
+      
+      await _stocks.ReplaceOneAsync(s => s.Id == stockId, updatedStock);
       return new ApiRes(200, true, "Stock updated successfully", new { });
+    }
+    catch (Exception ex)
+    {
+      return new ApiRes(500, false, ex.Message, new { });
+    }
+  }
+  
+  public async Task<ApiRes> UpdateStockQuantity(string stockId, UpdateStockQtyReqDto updateStockQtyReqDto)
+  {
+    try
+    {
+      var stock = await _stocks.Find(s => s.Id == stockId).FirstOrDefaultAsync();
+      if (stock == null)
+      {
+        return new ApiRes(404, false, "Stock not found", new { });
+      }
+
+      var updatedStock = new Stock
+      {
+        Id = stock.Id,
+        ProductId = stock.ProductId,
+        SubCategory = stock.SubCategory,
+        Category = stock.Category,
+        Quantity = updateStockQtyReqDto.Quantity,
+        LowStockAlert = stock.LowStockAlert
+      };
+      
+      await _stocks.ReplaceOneAsync(s => s.Id == stockId, updatedStock);
+      return new ApiRes(200, true, "Stock qty updated successfully", new { });
+    }
+    catch (Exception ex)
+    {
+      return new ApiRes(500, false, ex.Message, new { });
+    }
+  }
+  
+  public async Task<ApiRes> UpdateLowStockAlert(string stockId, UpdateLowStockAlertReqDto updateLowStockAlertReqDto)
+  {
+    try
+    {
+      var stock = await _stocks.Find(s => s.Id == stockId).FirstOrDefaultAsync();
+      if (stock == null)
+      {
+        return new ApiRes(404, false, "Stock not found", new { });
+      }
+
+      var updatedStock = new Stock
+      {
+        Id = stock.Id,
+        ProductId = stock.ProductId,
+        SubCategory = stock.SubCategory,
+        Category = stock.Category,
+        Quantity = stock.Quantity,
+        LowStockAlert = updateLowStockAlertReqDto.LowStockAlert
+      };
+      
+      await _stocks.ReplaceOneAsync(s => s.Id == stockId, updatedStock);
+      return new ApiRes(200, true, "Stock qty updated successfully", new { });
     }
     catch (Exception ex)
     {
@@ -105,6 +178,12 @@ public class StockService : IStockService
   {
     try
     {
+      var stock = await _stocks.Find(s => s.Id == stockId).FirstOrDefaultAsync();
+      if (stock == null)
+      {
+        return new ApiRes(404, false, "Stock not found", new { });
+      }
+      
       var result = await _stocks.DeleteOneAsync(s => s.Id == stockId);
       if (result.DeletedCount == 0)
       {

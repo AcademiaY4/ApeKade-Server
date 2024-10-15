@@ -7,7 +7,8 @@ public class SubCategory
 {
   [BsonId]
   [BsonRepresentation(BsonType.ObjectId)]
-  public required string Id { get; set; }
+  public string Id { get; set; }
   public required string SubCategoryName { get; set; }
-  public required int NoOfProducts { get; set; } = 0;
+  public required string Status { get; set; }
+  public int NoOfProducts { get; set; } = 0;
 }
