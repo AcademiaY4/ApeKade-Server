@@ -1,5 +1,6 @@
 using System;
 using apekade.Models;
+using apekade.Models.Dto.AuthDto;
 
 namespace apekade.Repositories;
 

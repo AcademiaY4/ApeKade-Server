@@ -12,5 +12,8 @@ public class DbContext{
         _database = client.GetDatabase(settings.DatabaseName);
     }
     //include all the mongo collections 
-     public IMongoCollection<User> Users => _database.GetCollection<User>("Users");
+    public IMongoCollection<User> Users => _database.GetCollection<User>("Users");
+    public IMongoCollection<Stock> Stocks => _database.GetCollection<Stock>("Stocks");
+    public IMongoCollection<Category> Categories => _database.GetCollection<Category>("Categories");
+    public IMongoCollection<Notification> Notifications => _database.GetCollection<Notification>("Notifications");
 }

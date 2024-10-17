@@ -1,6 +1,7 @@
 using MongoDB.Driver;
 using apekade.Models;
-using apekade.Enums;
+using apekade.Models.Enums;
+using apekade.Models.Dto.AuthDto;
 
 namespace apekade.Repositories;
 

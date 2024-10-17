@@ -1,3 +1,9 @@
+// ------------------------------------------------------------
+// File: CsrService.cs
+// Description: Implements services for managing customer accounts, including approving, deactivating, and reactivating user accounts.
+// Author: Shabeer M.S.M.
+// ------------------------------------------------------------
+
 using System;
 using apekade.Models.Dto;
 using apekade.Repositories;
@@ -15,6 +21,8 @@ public class CsrService : ICsrService
         _mapper = mapper;
         _csrRepository = csrRepository;
     }
+
+    // Method to approve a user account
     public async Task<ApiRes> ApproveUserAccount(string UserId)
     {
         try
@@ -34,6 +42,7 @@ public class CsrService : ICsrService
         }
     }
 
+    // Method to deactivate a user account
     public async Task<ApiRes> DeactivateUserAccount(string UserId)
     {
         try
@@ -53,6 +62,7 @@ public class CsrService : ICsrService
         }
     }
 
+    // Method to reactivate a user account
     public async Task<ApiRes> ReactivateUserAccount(string UserId)
     {
         try
