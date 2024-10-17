@@ -22,6 +22,10 @@ public interface IStockService
   // Method to update an existing stock entry
   Task<ApiRes> UpdateStock(string stockId, UpdateStockReqDto updateStockReqDto);
 
+  Task<ApiRes> UpdateLowStockAlert(string stockId, UpdateLowStockAlertReqDto updateLowStockAlertReqDto);
+
+  Task<ApiRes> UpdateStockQuantity(string stockId, UpdateStockQtyReqDto updateStockQtyReqDto);
+
   // Method to retrieve a list of all stock entries
   Task<ApiRes> GetAllStocks();
 
