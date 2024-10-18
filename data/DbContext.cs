@@ -15,5 +15,6 @@ public class DbContext{
     public IMongoCollection<User> Users => _database.GetCollection<User>("Users");
     public IMongoCollection<Stock> Stocks => _database.GetCollection<Stock>("Stocks");
     public IMongoCollection<Category> Categories => _database.GetCollection<Category>("Categories");
+    public IMongoCollection<Product> Products => _database.GetCollection<Product>("Products");
     public IMongoCollection<Notification> Notifications => _database.GetCollection<Notification>("Notifications");
 }

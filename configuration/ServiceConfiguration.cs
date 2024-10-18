@@ -42,6 +42,7 @@ public static class ServiceConfiguration
         services.AddScoped<IVendorService, VendorService>();
         services.AddScoped<IStockService, StockService>();
         services.AddScoped<ICategoryService, CategoryService>();
+        services.AddScoped<IProductService, ProductService>();
 
         // register helpers with DI
         services.AddScoped<JwtHelper>();

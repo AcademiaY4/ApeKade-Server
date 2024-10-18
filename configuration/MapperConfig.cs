@@ -6,6 +6,7 @@ using apekade.Models.Dto.VendorDto;
 using apekade.Models.Dto.BuyerDto;
 using apekade.Models.Dto.StockDto;
 using apekade.Models.Dto.CategoryDto;
+using apekade.Models.Dto.ProductDto;
 
 namespace apekade.Configuration;
 
@@ -55,5 +56,7 @@ public class MapperConfig : Profile
         CreateMap<UpdateSubCategoryReqDto, SubCategory>()
             .ForMember(dest => dest.Id, opt => opt.Ignore())
             .ForMember(dest => dest.NoOfProducts, opt => opt.Ignore());
+
+        CreateMap<CreateProductReqDto, Product>();
     }
 }
