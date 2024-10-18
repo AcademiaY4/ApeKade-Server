@@ -1,3 +1,9 @@
+// ------------------------------------------------------------
+// File: IBuyerService.cs
+// Description: Interface for buyer services, managing vendor ratings, account deactivation, and account updates
+// Author: Shabeer M.S.M.
+// ------------------------------------------------------------
+
 using System;
 using apekade.Models.Dto;
 using apekade.Models.Dto.BuyerDto;
@@ -7,7 +13,12 @@ namespace apekade.Services;
 
 public interface IBuyerService
 {
-    Task<ApiRes> AddVendorRating(string Id , AddVendorRatingDto addVendorRatingDto);
+    // Method to add a rating for a vendor
+    Task<ApiRes> AddVendorRating(string Id, AddVendorRatingDto addVendorRatingDto);
+
+    // Method to deactivate a buyer's account
     Task<ApiRes> DeactivateAccount(string userId);
-    Task<ApiRes> UpdateAccount(string Id ,UpdateBuyerDto updateBuyerDto);
+
+    // Method to update buyer account information
+    Task<ApiRes> UpdateAccount(string Id, UpdateBuyerDto updateBuyerDto);
 }

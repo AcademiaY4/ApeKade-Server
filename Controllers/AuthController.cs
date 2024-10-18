@@ -1,5 +1,11 @@
+// ------------------------------------------------------------
+// File: AuthController.cs
+// Description: Controller for handling authentication operations 
+// Author: Shabeer M.S.M.
+// ------------------------------------------------------------
+
 using Microsoft.AspNetCore.Mvc;
-using apekade.Enums;
+using apekade.Models.Enums;
 using apekade.Services;
 using apekade.Models.Dto.AuthDto;
 using apekade.Models.Dto;
@@ -7,17 +13,19 @@ using apekade.Models.Validation;
 
 namespace apekade.Controllers;
 
-[ApiController]
-[Route("api/[controller]")]
+[ApiController] 
+[Route("api/[controller]")] 
 public class AuthController : ControllerBase
 {
-    private readonly IAuthService _authService;
+    private readonly IAuthService _authService; 
 
+    // Constructor to initialize the AuthController with the auth service
     public AuthController(IAuthService authService)
     {
         _authService = authService;
     }
 
+    // Method to register a new user
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
     {
@@ -38,6 +46,7 @@ public class AuthController : ControllerBase
         return this.ApiRes(response.Code, response.Status, response.Message, response.Data);
     }
 
+    // Method to log in a user
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
     {

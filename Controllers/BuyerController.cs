@@ -1,3 +1,9 @@
+// ------------------------------------------------------------
+// File: BuyerController.cs
+// Description: Controller for handling buyer-related operations
+// Author: Shabeer M.S.M.
+// ------------------------------------------------------------
+
 using System.Security.Claims;
 using apekade.Models.Dto;
 using apekade.Models.Dto.BuyerDto;
@@ -11,17 +17,20 @@ using MongoDB.Bson;
 
 namespace apekade.Controllers;
 
-[Route("api/[controller]")]
-[ApiController]
-[Authorize(Roles = "BUYER")]
+[Route("api/[controller]")] 
+[ApiController] 
+[Authorize(Roles = "BUYER")] 
 public class BuyerController : ControllerBase
 {
-    private readonly IBuyerService _buyerService;
+    private readonly IBuyerService _buyerService; 
+
+    // Constructor to initialize the BuyerController with the buyer service
     public BuyerController(IBuyerService buyerService)
     {
         _buyerService = buyerService;
     }
 
+    // Method to update the buyer's account information
     [HttpPut("update-account")]
     public async Task<IActionResult> UpdateAccount([FromBody] UpdateBuyerDto updateBuyerDto)
     {
@@ -42,6 +51,7 @@ public class BuyerController : ControllerBase
         return this.ApiRes(response.Code, response.Status, response.Message, response.Data);
     }
 
+    // Method to deactivate the buyer's account
     [HttpPost("deactivate-account")]
     public async Task<IActionResult> DeactivateAccount()
     {
@@ -53,6 +63,7 @@ public class BuyerController : ControllerBase
         return this.ApiRes(response.Code, response.Status, response.Message, response.Data);
     }
 
+    // Method to add a rating for a vendor
     [HttpPost("add-vendor-rating")]
     public async Task<IActionResult> AddVendorRating(AddVendorRatingDto addVendorRatingDto)
     {
@@ -73,4 +84,3 @@ public class BuyerController : ControllerBase
         return this.ApiRes(response.Code, response.Status, response.Message, response.Data);
     }
 }
-

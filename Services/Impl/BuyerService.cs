@@ -1,5 +1,11 @@
+// ------------------------------------------------------------
+// File: BuyerService.cs
+// Description: Implements services for managing buyers, including adding vendor ratings, deactivating accounts, and updating account information.
+// Author: Shabeer M.S.M.
+// ------------------------------------------------------------
+
 using System;
-using apekade.Enums;
+using apekade.Models.Enums;
 using apekade.Models;
 using apekade.Models.Dto;
 using apekade.Models.Dto.BuyerDto;
@@ -19,21 +25,22 @@ public class BuyerService : IBuyerService
         _mapper = mapper;
         _buyerRepository = adminRepository;
     }
-    public async Task<ApiRes> AddVendorRating(string id , AddVendorRatingDto addVendorRatingDto)
+
+    // Method to add a rating for a vendor
+    public async Task<ApiRes> AddVendorRating(string id, AddVendorRatingDto addVendorRatingDto)
     {
         try
         {
-            var vendor = await _buyerRepository.GetUserByIdAndRole(addVendorRatingDto.VendorId,Role.VENDOR.ToString());
+            var vendor = await _buyerRepository.GetUserByIdAndRole(addVendorRatingDto.VendorId, Role.VENDOR.ToString());
             if (vendor == null) return new ApiRes(404, false, "vendor not found", new { });
 
             var rating = _mapper.Map<Rating>(addVendorRatingDto);
             vendor.VendorRatings = vendor.VendorRatings ?? new List<Rating>();
             vendor.VendorRatings.Add(rating);
-            // Console.WriteLine("pkoo"+rating.Comment);
+            // Console.WriteLine("pkoo" + rating.Comment);
 
             await _buyerRepository.AddVendorRating(vendor);
             return new ApiRes(200, true, "rating added", new { });
-
         }
         catch (Exception ex)
         {
@@ -41,9 +48,10 @@ public class BuyerService : IBuyerService
         }
     }
 
+    // Method to deactivate a user's account
     public async Task<ApiRes> DeactivateAccount(string userId)
     {
-         try
+        try
         {
             var user = await _buyerRepository.GetUserById(userId);
             if (user == null) return new ApiRes(404, false, "account not found", new { });
@@ -57,7 +65,8 @@ public class BuyerService : IBuyerService
         }
     }
 
-    public async Task<ApiRes> UpdateAccount(string id,UpdateBuyerDto updateBuyerDto)
+    // Method to update a buyer's account information
+    public async Task<ApiRes> UpdateAccount(string id, UpdateBuyerDto updateBuyerDto)
     {
         try
         {
