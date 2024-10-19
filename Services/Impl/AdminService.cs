@@ -91,6 +91,10 @@ public class AdminService : IAdminService
             var newUser = _mapper.Map<User>(createUserDto);
             // Auto activate account when admin creates users
             newUser.IsApproved = true;
+            newUser.Status= Models.Enums.Status.ACTIVE;
+             // Hash the new password
+            var newPasswordHash = HashPassword.CreatePasswordHash(createUserDto.Password);
+            newUser.PasswordHash = newPasswordHash;
             newUser.Status = Models.Enums.Status.ACTIVE;
 
             await _adminRepository.CreateNewUser(newUser);
