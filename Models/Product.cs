@@ -15,8 +15,8 @@ public class Product
   public string? Description { get; set; }
   public required int Quantity { get; set; }
   public string? ImageUrl { get; set; }
-  public List<String>? Colors { get; set; }
-  public List<String>? Sizes { get; set; }
+  public List<Color>? Colors { get; set; }
+  public List<Size>? Sizes { get; set; }
   public required string Category { get; set; }
   public required string SubCategory { get; set; }
   public string? Brand { get; set; }
