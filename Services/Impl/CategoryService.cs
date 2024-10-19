@@ -11,6 +11,7 @@ using apekade.Models.Dto;
 using apekade.Models.Dto.CategoryDto;
 using apekade.Services;
 using AutoMapper;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace apekade.Services.Impl;
@@ -38,7 +39,20 @@ public class CategoryService : ICategoryService
   {
     try
     {
-      var newCategory = _mapper.Map<Category>(createCategoryReqDto);
+      var newCategory = new Category
+      {
+        CategoryName = createCategoryReqDto.CategoryName,
+        Status = createCategoryReqDto.Status,
+        SubCategories = createCategoryReqDto.SubCategories?.Select(sc => new SubCategory
+        {
+          Id = ObjectId.GenerateNewId().ToString(),
+          SubCategoryName = sc.SubCategoryName,
+          Status = sc.Status,
+          NoOfProducts = 0
+        }).ToList() ?? [],
+      };
+
+      //var newCategory = _mapper.Map<Category>(createCategoryReqDto);
       await _categories.InsertOneAsync(newCategory);
       return new ApiRes(201, true, "Category created successfully", new { });
     }
@@ -49,17 +63,54 @@ public class CategoryService : ICategoryService
   }
 
   // Method to edit an existing category in the database
-  public async Task<ApiRes> EditCategory(UpdateCategoryReqDto updateCategoryReqDto)
+  public async Task<ApiRes> EditCategory(string id, UpdateCategoryReqDto updateCategoryReqDto)
   {
     try
     {
-      var filter = Builders<Category>.Filter.Eq(c => c.Id, updateCategoryReqDto.Id);
-      var update = _mapper.Map<Category>(updateCategoryReqDto);
-      var result = await _categories.ReplaceOneAsync(filter, update);
+      var category = await _categories.Find(category => category.Id == id).FirstOrDefaultAsync();
+      if (category == null) return new ApiRes(404, false, "Category not found", new { });
 
-      if (result.ModifiedCount > 0)
-        return new ApiRes(200, true, "Category updated successfully", new { });
-      return new ApiRes(404, false, "Category not found", new { });
+      var updatedSubCategories = new List<SubCategory>();
+
+      foreach (var subCategoryDto in updateCategoryReqDto.SubCategories)
+      {
+        // Check if subcategory exists in the current category
+        var existingSubCategory = category.SubCategories?.FirstOrDefault(sc => sc.SubCategoryName == subCategoryDto.SubCategoryName);
+
+        if (existingSubCategory != null)
+        {
+          // Update fields but preserve Id and NoOfProducts
+          existingSubCategory.SubCategoryName = subCategoryDto.SubCategoryName;
+          existingSubCategory.Status = subCategoryDto.Status;
+
+          // Add to the updated list
+          updatedSubCategories.Add(existingSubCategory);
+        }
+        else
+        {
+          // Add new subcategory with auto-generated Id by MongoDB
+          var newSubCategory = new SubCategory
+          {
+            SubCategoryName = subCategoryDto.SubCategoryName,
+            Status = subCategoryDto.Status,
+            NoOfProducts = 0 // Initialize NoOfProducts for new subcategory
+          };
+
+          updatedSubCategories.Add(newSubCategory);
+        }
+      }
+
+      // Assign the manually updated SubCategories back to the category
+      category.SubCategories = updatedSubCategories;
+
+      // Use AutoMapper to map other fields from the DTO, but exclude the fields we handled manually
+      _mapper.Map(updateCategoryReqDto, category);
+
+      // Replace the updated category in the database
+      await _categories.ReplaceOneAsync(c => c.Id == category.Id, category);
+
+      var categoryRes = _mapper.Map<GetCategoryResDto>(category);
+      return new ApiRes(200, true, "Category updated successfully", new { categoryRes });
     }
     catch (Exception ex)
     {
@@ -102,6 +153,9 @@ public class CategoryService : ICategoryService
   {
     try
     {
+      var category = await _categories.Find(category => category.Id == categoryId).FirstOrDefaultAsync();
+      if (category == null) return new ApiRes(404, false, "Category not found", new { });
+
       var result = await _categories.DeleteOneAsync(c => c.Id == categoryId);
       if (result.DeletedCount > 0)
         return new ApiRes(200, true, "Category deleted successfully", new { });
@@ -124,4 +178,38 @@ public class CategoryService : ICategoryService
   {
     return new ApiRes(500, false, "", new { });
   }
+
+  public async Task<ApiRes> UpdateNoOfProducts(UpdateNoOfProductsReqDto updateNoOfProductsReqDto)
+  {  
+    try
+    {
+      // Find the category by its Id
+      var category = await _categories.Find(c => c.Id == updateNoOfProductsReqDto.CategoryId).FirstOrDefaultAsync();
+      if (category == null) return new ApiRes(404, false, "Category not found", new { });
+
+      // Update the NoOfProducts of the category
+      category.NoOfProducts += updateNoOfProductsReqDto.Amount;
+
+      // Find the subcategory by its Id and update its NoOfProducts
+      var subCategory = category.SubCategories?.FirstOrDefault(sc => sc.Id == updateNoOfProductsReqDto.SubCategoryId);
+      if (subCategory != null)
+      {
+        subCategory.NoOfProducts += updateNoOfProductsReqDto.Amount;
+      }
+      else
+      {
+        return new ApiRes(404, false, "Subcategory not found", new { });
+      }
+
+      // Save the updated category and subcategory
+      await _categories.ReplaceOneAsync(c => c.Id == category.Id, category);
+
+      return new ApiRes(200, true, "NoOfProducts updated successfully", new { });
+    }
+    catch (Exception ex)
+    {
+      return new ApiRes(500, false, ex.Message, new { });
+    }
+  }
+
 }

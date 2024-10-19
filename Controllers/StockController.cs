@@ -56,6 +56,20 @@ public class StockController : ControllerBase
     var response = await _stockService.UpdateStock(stockId, updateStockReqDto);
     return this.ApiRes(response.Code, response.Status, response.Message, response.Data);
   }
+  
+  [HttpPut("update-stock-qty/{stockId}")]
+  public async Task<IActionResult> UpdateStockQuantity(string stockId, [FromBody] UpdateStockQtyReqDto updateStockQtyReq)
+  {
+    var response = await _stockService.UpdateStockQuantity(stockId, updateStockQtyReq);
+    return this.ApiRes(response.Code, response.Status, response.Message, response.Data);
+  }
+  
+  [HttpPut("update-low-stock-alert/{stockId}")]
+  public async Task<IActionResult> UpdateLowStockAlert(string stockId, [FromBody] UpdateLowStockAlertReqDto updateLowStockAlertReqDto)
+  {
+    var response = await _stockService.UpdateLowStockAlert(stockId, updateLowStockAlertReqDto);
+    return this.ApiRes(response.Code, response.Status, response.Message, response.Data);
+  }
 
   // Method to get all stock entries from the database
   [HttpGet("get-all-stocks")]

@@ -3,12 +3,11 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace apekade.Models;
 
-public class SubCategory
+public class Size
 {
   [BsonId]
   [BsonRepresentation(BsonType.ObjectId)]
   public string Id { get; set; }
-  public required string SubCategoryName { get; set; }
-  public required string Status { get; set; }
-  public int NoOfProducts { get; set; } = 0;
+  public required string SizeString { get; set; }
+  public required int Quantity { get; set; }
 }

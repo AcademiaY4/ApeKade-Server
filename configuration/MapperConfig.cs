@@ -6,6 +6,7 @@ using apekade.Models.Dto.VendorDto;
 using apekade.Models.Dto.BuyerDto;
 using apekade.Models.Dto.StockDto;
 using apekade.Models.Dto.CategoryDto;
+using apekade.Models.Dto.ProductDto;
 
 namespace apekade.Configuration;
 
@@ -41,7 +42,23 @@ public class MapperConfig : Profile
         CreateMap<Stock, CreateStockResDto>();
         
         CreateMap<CreateCategoryReqDto, Category>();
-        //CreateMap<Category, CreateCategoryResDto>();
+        CreateMap<Category, CreateCategoryResDto>();
 
+        CreateMap<GetCategoryReqDto, Category>();
+        CreateMap<Category, GetCategoryResDto>();
+
+        CreateMap<UpdateCategoryReqDto, Category>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore())  
+            .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())  
+            .ForMember(dest => dest.NoOfProducts, opt => opt.Ignore()) 
+            .ForMember(dest => dest.SubCategories, opt => opt.MapFrom(src => src.SubCategories));
+
+        CreateMap<UpdateSubCategoryReqDto, SubCategory>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
+            .ForMember(dest => dest.NoOfProducts, opt => opt.Ignore());
+
+        CreateMap<CreateProductReqDto, Product>();
+        CreateMap<GetProductReqDto, Product>();
+        CreateMap<Product, GetProductResDto>();
     }
 }
