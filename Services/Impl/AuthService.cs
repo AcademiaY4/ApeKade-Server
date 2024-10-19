@@ -1,3 +1,9 @@
+// ------------------------------------------------------------
+// File: AuthService.cs
+// Description: Implements authentication services for user login and registration.
+// Author: Shabeer M.S.M.
+// ------------------------------------------------------------
+
 using apekade.Models.Dto;
 using apekade.Repositories;
 using apekade.Helpers;
@@ -20,6 +26,8 @@ public class AuthService : IAuthService
         _userRepository = userRepository;
         _jwtHelper = jwtHelper;
     }
+
+    // Method to handle user login
     public async Task<ApiRes> Login(LoginDto loginDto)
     {
         var user = await _userRepository.GetUserByEmailAndRole(loginDto.Email, loginDto.Role);
@@ -37,14 +45,15 @@ public class AuthService : IAuthService
         var loginResDto = _mapper.Map<LoginResDto>(user);
 
         var token = _jwtHelper.GenerateJwt(user);
-        return new ApiRes(200, true, "login succcess", new { access_token = token, user = loginResDto, role = loginResDto.Role });
+        return new ApiRes(200, true, "login success", new { access_token = token, user = loginResDto, role = loginResDto.Role });
     }
 
+    // Method to handle user registration
     public async Task<ApiRes> Register(RegisterDto registerDto)
     {
         try
         {
-            //check if the user exists in the DB
+            // Check if the user exists in the DB
             var existingUser = await _userRepository.GetUserByEmail(registerDto.Email);
             if (existingUser != null)
             {

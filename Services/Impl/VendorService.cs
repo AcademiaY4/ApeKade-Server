@@ -1,3 +1,9 @@
+// ------------------------------------------------------------
+// File: VendorService.cs
+// Description: Implements services for managing vendor profiles, including updating vendor details.
+// Author: Shabeer M.S.M.
+// ------------------------------------------------------------
+
 using System;
 using apekade.Models.Enums;
 using apekade.Models;
@@ -19,18 +25,19 @@ public class VendorService : IVendorService
         _vendorRepository = vendorRepository;
     }
 
-    public async Task<ApiRes> UpdateVendorProfile(string Id,UpdateVendorDto updateVendorDto)
+    // Method to update a vendor's profile
+    public async Task<ApiRes> UpdateVendorProfile(string Id, UpdateVendorDto updateVendorDto)
     {
         try
         {
-            var user = await _vendorRepository.GetUserByIdAndRole(Id,Role.VENDOR.ToString());
+            var user = await _vendorRepository.GetUserByIdAndRole(Id, Role.VENDOR.ToString());
             if (user == null) return new ApiRes(409, false, "Vendor already exists.", new { });
 
-           _mapper.Map(updateVendorDto, user);
+            _mapper.Map(updateVendorDto, user);
             await _vendorRepository.UpdateProfile(user);
 
             var vendorRes = _mapper.Map<UpdateVendorResDto>(user);
-            return new ApiRes(200, true, "Vendor updated successfully", new {vendor = vendorRes });
+            return new ApiRes(200, true, "Vendor updated successfully", new { vendor = vendorRes });
         }
         catch (Exception ex)
         {
