@@ -65,7 +65,7 @@ public class BuyerController : ControllerBase
 
     // Method to add a rating for a vendor
     [HttpPost("add-vendor-rating")]
-    public async Task<IActionResult> AddVendorRating(AddVendorRatingDto addVendorRatingDto)
+    public async Task<IActionResult> AddVendorRating([FromBody] AddVendorRatingDto addVendorRatingDto)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(userId))
@@ -80,7 +80,31 @@ public class BuyerController : ControllerBase
             return this.ApiRes(400, false, "Validation error", firstError);
         }
 
-        var response = await _buyerService.AddVendorRating(userId, addVendorRatingDto);
+        addVendorRatingDto.CustomerId = userId;
+        var response = await _buyerService.AddVendorRating(addVendorRatingDto);
+        return this.ApiRes(response.Code, response.Status, response.Message, response.Data);
+    }
+
+    // Method to get vendor details
+    [HttpGet("get-vendor/{vendorId}")]
+    public async Task<IActionResult> GetVendorById(string vendorId)
+    {
+        if (!ObjectId.TryParse(vendorId, out var objectId))
+            return this.ApiRes(400, false, "invalid MongoDB ObjectId.", null);
+        var response = await _buyerService.GetVendorById(vendorId);
+        return this.ApiRes(response.Code, response.Status, response.Message, response.Data);
+    }
+
+    // Method to get reviews and ratings of current user
+    [HttpGet("get-reviews")]
+    public async Task<IActionResult> GetReviews()
+    {
+        
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userId))
+            return this.ApiRes(400, false, "invalid MongoDB ObjectId.", null);
+
+        var response = await _buyerService.GetReviews(userId);
         return this.ApiRes(response.Code, response.Status, response.Message, response.Data);
     }
 }

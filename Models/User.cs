@@ -39,6 +39,9 @@ public class User
 
     [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
     public DateTime DateCreated { get; set; } = DateTime.UtcNow;
+    
     // Applicable for vendors only
+    public string? ShopName { get; set; }
+    public string? ShopDescription { get; set; }
     public List<Rating>? VendorRatings { get; set; } = null;
 }

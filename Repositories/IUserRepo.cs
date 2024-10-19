@@ -19,4 +19,5 @@ public interface IUserRepo
     Task DeactivateAccount(string userId);
     Task ReactivateAccount(string userId);
     Task DeleteUser(string userId);
+    Task<List<Rating>> GetReviewsByUserId(string userId);
 }

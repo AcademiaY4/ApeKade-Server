@@ -46,6 +46,10 @@ public class MapperConfig : Profile
         CreateMap<GetCategoryReqDto, Category>();
         CreateMap<Category, GetCategoryResDto>();
 
+        CreateMap<User, GetVendorResDto>();
+
+        CreateMap<Rating, GetReviewResDto>();
+
         CreateMap<UpdateCategoryReqDto, Category>()
             .ForMember(dest => dest.Id, opt => opt.Ignore())  
             .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())  

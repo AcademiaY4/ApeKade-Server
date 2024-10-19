@@ -14,7 +14,12 @@ namespace apekade.Services;
 public interface IBuyerService
 {
     // Method to add a rating for a vendor
-    Task<ApiRes> AddVendorRating(string Id, AddVendorRatingDto addVendorRatingDto);
+    Task<ApiRes> AddVendorRating(AddVendorRatingDto addVendorRatingDto);
+
+    // Method to retrieve a user by their ID
+    Task<ApiRes> GetVendorById(string vendorId);
+    // Method to retrieve reviews by user ID
+    Task<ApiRes> GetReviews(string vendorId);
 
     // Method to deactivate a buyer's account
     Task<ApiRes> DeactivateAccount(string userId);

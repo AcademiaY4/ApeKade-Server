@@ -27,7 +27,7 @@ public class BuyerService : IBuyerService
     }
 
     // Method to add a rating for a vendor
-    public async Task<ApiRes> AddVendorRating(string id, AddVendorRatingDto addVendorRatingDto)
+    public async Task<ApiRes> AddVendorRating(AddVendorRatingDto addVendorRatingDto)
     {
         try
         {
@@ -35,12 +35,50 @@ public class BuyerService : IBuyerService
             if (vendor == null) return new ApiRes(404, false, "vendor not found", new { });
 
             var rating = _mapper.Map<Rating>(addVendorRatingDto);
-            vendor.VendorRatings = vendor.VendorRatings ?? new List<Rating>();
+            // vendor.VendorRatings = vendor.VendorRatings ?? new List<Rating>();
+            vendor.VendorRatings ??= new List<Rating>();
             vendor.VendorRatings.Add(rating);
-            // Console.WriteLine("pkoo" + rating.Comment);
 
             await _buyerRepository.AddVendorRating(vendor);
             return new ApiRes(200, true, "rating added", new { });
+        }
+        catch (Exception ex)
+        {
+            return new ApiRes(500, false, ex.Message, new { });
+        }
+    }
+
+     // Method to get a vendor by his ID
+    public async Task<ApiRes> GetVendorById(string vendorId)
+    {
+        try
+        {
+            var user = await _buyerRepository.GetUserByIdAndRole(vendorId, Role.VENDOR.ToString());
+            if (user == null) return new ApiRes(404, false, "User not found", new { });
+
+            var userRes = _mapper.Map<GetVendorResDto>(user);
+            return new ApiRes(200, true, "User found", new { user = userRes });
+        }
+        catch (Exception ex)
+        {
+            return new ApiRes(500, false, ex.Message, new { });
+        }
+    }
+
+     // Method to get reviews
+    public async Task<ApiRes> GetReviews(string userId)
+    {
+        try
+        {
+            var user = await _buyerRepository.GetUserById(userId);
+            if (user == null) return new ApiRes(404, false, "User not found", new { });
+
+            var reviews = await _buyerRepository.GetReviewsByUserId(userId);
+            if (reviews == null || !reviews.Any())
+                return new ApiRes(404, false, "No reviews found for this user", new { });
+
+            var reviewRes = _mapper.Map<List<GetReviewResDto>>(reviews);
+            return new ApiRes(200, true, "User found", new { reviews = reviewRes });
         }
         catch (Exception ex)
         {

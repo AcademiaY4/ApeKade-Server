@@ -8,7 +8,11 @@ namespace apekade.Models;
 public class Rating
 {
     [Required]
-    public required int Stars { get; set; } 
+    public required float ItemQualityRating { get; set; }
+    [Required]
+    public required float CommunicationRating { get; set; }
+    [Required]
+    public required float ShippingSpeedRating { get; set; }  
     [Required]
     public required string Comment { get; set; }  
     [BsonRepresentation(BsonType.ObjectId)]

@@ -17,5 +17,7 @@ public class CreateUserDto
     public string City { get; set; }
     public string ZipCode { get; set; }
     public string Company { get; set; }
+    public string ShopName { get; set; }
+    public string ShopDescription { get; set; }
 
 }

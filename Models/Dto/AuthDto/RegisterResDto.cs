@@ -18,6 +18,8 @@ public class RegisterResDto
     public string ZipCode { get; set; }
     public string Company { get; set; }
     public DateTime DateCreated { get; set; }
+    public string ShopName { get; set; }
+    public string ShopDescription { get; set; }
 
     // Vendor-specific data
     public List<Rating> VendorRatings { get; set; }

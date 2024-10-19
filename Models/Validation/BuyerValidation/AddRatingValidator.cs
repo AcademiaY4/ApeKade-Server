@@ -12,17 +12,21 @@ public class AddRatingValidator : AbstractValidator<AddVendorRatingDto>
             .NotEmpty()
             .WithMessage("vendor Id is required.");
 
-        RuleFor(x => x.Stars)
+        RuleFor(x => x.ItemQualityRating)
+            .NotEmpty()
+            .WithMessage("stars is required.").InclusiveBetween(1,5).WithMessage("stars must be  within 1 to 5");
+
+        RuleFor(x => x.CommunicationRating)
+            .NotEmpty()
+            .WithMessage("stars is required.").InclusiveBetween(1,5).WithMessage("stars must be  within 1 to 5");
+
+        RuleFor(x => x.ShippingSpeedRating)
             .NotEmpty()
             .WithMessage("stars is required.").InclusiveBetween(1,5).WithMessage("stars must be  within 1 to 5");
 
         RuleFor(x => x.Comment)
            .NotEmpty()
            .WithMessage("comment is required.");
-
-        RuleFor(x => x.CustomerId)
-           .NotEmpty()
-           .WithMessage("customer Id is required.");
 
     }
 }

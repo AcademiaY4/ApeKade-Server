@@ -13,4 +13,6 @@ public class RegisterDto
     public string District { get; set; }
     public string Province { get; set; }
     public string City { get; set; }
+    public string ShopName { get; set; }
+    public string ShopDescription { get; set; }
 }

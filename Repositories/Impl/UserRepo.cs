@@ -58,7 +58,10 @@ public class UserRepo : IUserRepo
     //method to add rating for  vendor
     public async Task AddVendorRating(User vendor)
     {
-        await _users.ReplaceOneAsync(u => u.Id == vendor.Id, vendor);
+        // await _users.ReplaceOneAsync(u => u.Id == vendor.Id, vendor);
+        var filter = Builders<User>.Filter.Eq(u => u.Id, vendor.Id);
+        var update = Builders<User>.Update.Set(u => u.VendorRatings, vendor.VendorRatings);
+        await _users.UpdateOneAsync(filter, update);
     }
 
     // Method to approve customer accounts
@@ -96,5 +99,14 @@ public class UserRepo : IUserRepo
     public async Task<User?> GetUserByIdAndRole(string Id, string role)
     {
         return await _users.Find(user => user.Id == Id && user.Role.ToString() == role).FirstOrDefaultAsync();
+    }
+
+    public async Task<List<Rating>> GetReviewsByUserId(string userId)
+    {
+        var user = await _users.Find(u => u.Id == userId).FirstOrDefaultAsync();
+        if (user == null || user.VendorRatings == null)
+            return new List<Rating>();
+
+        return user.VendorRatings.Where(r => r.CustomerId == userId).ToList();
     }
 }
