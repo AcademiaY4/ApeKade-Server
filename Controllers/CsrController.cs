@@ -1,3 +1,9 @@
+// ------------------------------------------------------------
+// File: CsrController.cs
+// Description: Controller for handling customer service representative (CSR) operations
+// Author: Shabeer M.S.M.
+// ------------------------------------------------------------
+
 using apekade.Models.Dto;
 using apekade.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -7,16 +13,20 @@ using MongoDB.Bson;
 
 namespace apekade.Controllers;
 
-[Route("api/[controller]")]
-[ApiController]
+[Route("api/[controller]")] 
+[ApiController] 
 [Authorize(Roles = "CSR,ADMIN")]
 public class CsrController : ControllerBase
 {
     private readonly ICsrService _csrService;
+
+    // Constructor to initialize the CsrController with the CSR service
     public CsrController(ICsrService csrService)
     {
         _csrService = csrService;
     }
+
+    // Method to approve a customer's account
     [HttpPost("approve-customer/{userId}")]
     public async Task<IActionResult> ApproveCustomerAccount(string userId)
     {
@@ -27,6 +37,7 @@ public class CsrController : ControllerBase
         return this.ApiRes(response.Code, response.Status, response.Message, response.Data);
     }
 
+    // Method to deactivate a customer's account
     [HttpPost("deactivate-customer/{userId}")]
     public async Task<IActionResult> DeactivateCustomerAccount(string userId)
     {
@@ -37,6 +48,7 @@ public class CsrController : ControllerBase
         return this.ApiRes(response.Code, response.Status, response.Message, response.Data);
     }
 
+    // Method to reactivate a customer's account
     [HttpPost("reactivate-customer/{userId}")]
     public async Task<IActionResult> ReactivateCustomerAccount(string userId)
     {
@@ -47,4 +59,3 @@ public class CsrController : ControllerBase
         return this.ApiRes(response.Code, response.Status, response.Message, response.Data);
     }
 }
-
