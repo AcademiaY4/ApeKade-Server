@@ -83,6 +83,9 @@ public class AdminService : IAdminService
             // auto activate account when admin create users
             newUser.IsApproved = true;
             newUser.Status= Models.Enums.Status.ACTIVE;
+             // Hash the new password
+            var newPasswordHash = HashPassword.CreatePasswordHash(createUserDto.Password);
+            newUser.PasswordHash = newPasswordHash;
 
             await _adminRepository.CreateNewUser(newUser);
             return new ApiRes(201, true, "User created successfully", new { });
