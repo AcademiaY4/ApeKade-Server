@@ -37,4 +37,11 @@ public class ProductController : ControllerBase
     var response = await _productService.GetProductById(id);
     return this.ApiRes(response.Code, response.Status, response.Message, response.Data);
   }
+  
+  [HttpDelete("delete/{id}")]
+  public async Task<IActionResult> DeleteProduct(string id)
+  {
+    var response = await _productService.DeleteProduct(id);
+    return this.ApiRes(response.Code, response.Status, response.Message, response.Data);
+  }
 }

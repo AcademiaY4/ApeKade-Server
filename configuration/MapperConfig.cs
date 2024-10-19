@@ -58,5 +58,7 @@ public class MapperConfig : Profile
             .ForMember(dest => dest.NoOfProducts, opt => opt.Ignore());
 
         CreateMap<CreateProductReqDto, Product>();
+        CreateMap<GetProductReqDto, Product>();
+        CreateMap<Product, GetProductResDto>();
     }
 }

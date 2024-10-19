@@ -67,7 +67,7 @@ public class ProductService : IProductService
     }
   }
 
-  public async Task<ApiRes> GetProductById(String productId)
+  public async Task<ApiRes> GetProductById(string productId)
   {
     try
     {
@@ -82,5 +82,33 @@ public class ProductService : IProductService
     {
       return new ApiRes(500, false, ex.Message, new { });
     }
-  } 
+  }
+
+  public async Task<ApiRes> DeleteProduct(string productId)
+  {
+    try
+    {
+      var product = await _products.Find(p => p.Id == productId).FirstOrDefaultAsync();
+      if (product == null)
+      {
+        return new ApiRes(404, false, "Product not found", new { });
+      }
+
+      var result = await _products.DeleteOneAsync(s => s.Id == productId);
+      if (result.DeletedCount == 0)
+      {
+        return new ApiRes(404, false, "Product not found", new { });
+      }
+      return new ApiRes(200, true, "Product  deleted successfully", new { });
+    }
+    catch (Exception ex)
+    {
+      return new ApiRes(500, false, ex.Message, new { });
+    }
+  }
+
+  public Task<ApiRes> UpdateProduct(string productId, UpdateProductReqDto updateProductReqDto)
+  {
+    throw new NotImplementedException();
+  }
 }
