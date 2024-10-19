@@ -14,10 +14,9 @@ public interface IUserService
 {
     // Method to retrieve a user by their unique ID
     Task<ApiRes> GetUserById(string userId);
-
+    Task<ApiRes> DeactivateAccount(string userId);
     // Method to retrieve a user by their email address
     Task<ApiRes> GetUserByEmail(string email);
-
     // Method to fetch all registered users
     Task<ApiRes> GetAllUsers();
 }
