@@ -25,9 +25,20 @@ public class UserService : IUserService
         throw new NotImplementedException();
     }
 
-    public Task<ApiRes> DeactivateAccount(string userId)
+    public async Task<ApiRes> DeactivateAccount(string userId)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var user = await _userRepository.GetUserById(userId);
+            if (user == null) return new ApiRes(404, false, "User not found", new { });
+
+            await _userRepository.DeactivateAccount(userId);
+            return new ApiRes(200, true, "User deactivated", new { });
+        }
+        catch (Exception ex)
+        {
+            return new ApiRes(500, false, ex.Message, new { });
+        }
     }
 
     public Task<ApiRes> GetUserByEmail(string email)

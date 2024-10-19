@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using apekade.Models.Enums;
 using apekade.Services;
 using Microsoft.AspNetCore.Authorization;
+using MongoDB.Bson;
+using apekade.Models.Dto;
 
 namespace apekade.Controllers;
 
@@ -29,5 +31,15 @@ public class UserController : ControllerBase
     {
         var users = await _userService.GetAllUsers();
         return Ok(users);
+    }
+
+    [HttpGet("deactivate-user/{userId}")]
+    public async Task<IActionResult> DeactivateUser(string userId)
+    {
+        if (!ObjectId.TryParse(userId, out var objectId))
+            return this.ApiRes(400, false, "invalid MongoDB ObjectId.", null);
+
+        var response = await _userService.DeactivateAccount(userId);
+        return this.ApiRes(response.Code, response.Status, response.Message, response.Data);
     }
 }
